@@ -21,16 +21,14 @@ function ApplicationForm(props) {
     return (
         <>
             <h2>Add Job Application</h2>
-            <form onSubmit={function handleSubmit(event) {
+            <form onSubmit={async function handleSubmit(event) {
                 event.preventDefault()
                 const formData = new FormData(event.currentTarget);
                 const company = formData.get("company").trim()
 
                 const position = formData.get("position").trim()
                 const status = formData.get("status")
-                const newId = props.applications.length === 0
-                    ? 1
-                    : Math.max(...props.applications.map((application) => application.id)) + 1
+
                 if (company === "") {
                     setCompanyError("Company name is required.")
                     return
@@ -41,40 +39,50 @@ function ApplicationForm(props) {
                     return
                 }
                 if (props.editingId !== null) {
-                    const updatedApplications = props.applications.map((application) => {
-                        if (application.id === props.editingId) {
-                            return {
-                                id: application.id,
-                                company: company,
-                                position: position,
-                                status: status,
+                    try {
+                        const response = await fetch(`http://localhost:3000/api/applications/${props.editingId}`, {
+                            method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ company, position, status })
+                        })
+                        if (!response.ok) {
+                            throw new Error("Failed to update application");
+
+                        } const responseJson = await response.json();
+                        props.setApplications(props.applications.map((application) => {
+                            if (props.editingId === application.id) {
+                                return responseJson
                             }
 
-                        }
-                        return application
-                    })
-                    props.setApplications(updatedApplications)
-                    props.setEditingId(null)
-                } else {
-                    const application = {
-
-                        id: newId,
-                        company: company,
-                        position: position,
-                        status: status,
+                            return application
+                        }))
+                        props.setEditingId(null)
+                        setCompanyValue("")
+                        setPositionValue("")
+                        setStatusValue("Applied")
+                        setCompanyError("")
+                        setPositionError("")
                     }
-                    props.setApplications(
-                        [
-                            ...props.applications,
-                            application
-                        ]
-                    )
+                    catch (error) { console.error(error) }
+
+                } else {
+                    try {
+                        const response = await fetch("http://localhost:3000/api/applications", {
+                            method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ company, position, status })
+                        });
+                        if (!response.ok) {
+                            throw new Error("Unsuccessful");
+                        }
+                        const responseJson = await response.json();
+                        props.setApplications([...props.applications, responseJson])
+                        setCompanyValue("")
+                        setPositionValue("")
+                        setStatusValue("Applied")
+                        setCompanyError("")
+                        setPositionError("")
+                    } catch (error) {
+                        console.error(error)
+                    }
                 }
-                setCompanyValue("")
-                setPositionValue("")
-                setStatusValue("Applied")
-                setCompanyError("")
-                setPositionError("")
+
             }}>
                 <label>Company</label>
 

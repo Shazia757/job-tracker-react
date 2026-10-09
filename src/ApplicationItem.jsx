@@ -8,11 +8,20 @@ function ApplicationItem(props) {
             Status: {props.application.status}
             <br />
             <button onClick={() => { props.setEditingId(props.application.id) }}>Edit</button>
-            <button onClick={() => {
-                const remainingApplications = props.applications.filter(
-                    (app) => app.id !== props.application.id
-                )
-                props.setApplications(remainingApplications)
+            <button onClick={async () => {
+                try {
+                    const response = await fetch(`http://localhost:3000/api/applications/${props.application.id}`, { method: 'DELETE' });
+                    if (!response.ok) {
+                        throw new Error("Failed to delete application");
+                    }
+                    const remainingApplications = props.applications.filter(
+                        (app) => app.id !== props.application.id
+                    )
+                    props.setApplications(remainingApplications)
+                } catch (error) {
+                    console.error(error)
+                }
+
 
             }}>Delete</button>
         </div>

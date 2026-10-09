@@ -6,22 +6,41 @@ import Header from './Header.jsx'
 import { useState, useEffect } from 'react'
 
 function App() {
-  const [applications, setApplications] = useState(() => {
-    const savedApplications = localStorage.getItem("applications")
-    if (savedApplications) {
-      const parsedApplications = JSON.parse(savedApplications)
-      return parsedApplications
+  const [applications, setApplications] = useState([]);
+  // const [applications, setApplications] = useState(() => {
+  //   const savedApplications = localStorage.getItem("applications")
+  //   if (savedApplications) {
+  //     const parsedApplications = JSON.parse(savedApplications)
+  //     return parsedApplications
 
-    }
-    return []
-  })
+  //   }
+  //   return []
+  // })
   const [statusFilter, setStatusFilter] = useState("All")
   const [searchTerm, setSearchTerm] = useState("")
   const [editingId, setEditingId] = useState(null)
 
+  // useEffect(() => {
+  //   localStorage.setItem("applications", JSON.stringify(applications))
+  // }, [applications])
+
   useEffect(() => {
-    localStorage.setItem("applications", JSON.stringify(applications))
-  }, [applications])
+
+    const fetchApplications = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/api/applications");
+        if (!response.ok) {
+          throw new Error("Failed to fetch applications");
+        }
+        const data = await response.json();
+        setApplications(data);
+
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    fetchApplications();
+  }, [])
 
   return (
     <>
