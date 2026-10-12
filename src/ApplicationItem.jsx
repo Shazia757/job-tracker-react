@@ -10,7 +10,7 @@ function ApplicationItem(props) {
             <button onClick={() => { props.setEditingId(props.application.id) }}>Edit</button>
             <button onClick={async () => {
                 try {
-                    const response = await fetch(`${import.meta.env.VITE_API_URL}/${props.application.id}`, { method: 'DELETE' });
+                    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/applications/${props.application.id}`, { method: 'DELETE' });
                     if (!response.ok) {
                         throw new Error("Failed to delete application");
                     }

@@ -40,7 +40,7 @@ function ApplicationForm(props) {
                 }
                 if (props.editingId !== null) {
                     try {
-                        const response = await fetch(`${import.meta.env.VITE_API_URL}/${props.editingId}`, {
+                        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/applications/${props.editingId}`, {
                             method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ company, position, status })
                         })
                         if (!response.ok) {
@@ -65,7 +65,7 @@ function ApplicationForm(props) {
 
                 } else {
                     try {
-                        const response = await fetch(import.meta.env.VITE_API_URL, {
+                        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/applications`, {
                             method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ company, position, status })
                         });
                         if (!response.ok) {
