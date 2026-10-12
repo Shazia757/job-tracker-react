@@ -1,4 +1,3 @@
-import ApiPractice from './ApiPractice.jsx'
 import './App.css'
 import ApplicationForm from './ApplicationForm.jsx'
 import ApplicationList from './ApplicationList.jsx'
@@ -50,7 +49,6 @@ function App() {
         editingId={editingId} setEditingId={setEditingId}
 
       />
-      <ApiPractice />
       <ApplicationList applications={applications}
         statusFilter={statusFilter} setStatusFilter={setStatusFilter}
         searchTerm={searchTerm} setSearchTerm={setSearchTerm}
