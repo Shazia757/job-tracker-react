@@ -28,7 +28,7 @@ function App() {
 
     const fetchApplications = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/applications");
+        const response = await fetch(import.meta.env.VITE_API_URL);
         if (!response.ok) {
           throw new Error("Failed to fetch applications");
         }
