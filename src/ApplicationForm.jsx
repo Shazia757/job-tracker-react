@@ -20,8 +20,10 @@ function ApplicationForm(props) {
     }, [props.editingId])
     return (
         <>
-            <h2>Add Job Application</h2>
-            <form onSubmit={async function handleSubmit(event) {
+            <h2 className="section-title">
+                {props.editingId !== null ? "Edit Job Application" : "Add Job Application"}
+            </h2>
+            <form className="application-form" onSubmit={async function handleSubmit(event) {
                 event.preventDefault()
                 const formData = new FormData(event.currentTarget);
                 const company = formData.get("company").trim()
@@ -84,37 +86,61 @@ function ApplicationForm(props) {
                 }
 
             }}>
-                <label>Company</label>
+                <div className="form-group">
+                    <label htmlFor="company">Company</label>
 
-                <input id="company" name="company" placeholder="Enter company name" value={companyValue} onChange={(event) => {
-                    setCompanyValue(event.target.value)
-                    setCompanyError("")
-                }} /><br></br>
-                <p>{companyError}</p>
-                <label>Position</label>
+                    <input id="company" name="company" placeholder="Enter company name" value={companyValue} onChange={(event) => {
+                        setCompanyValue(event.target.value)
+                        setCompanyError("")
+                    }} />
+                    {companyError && <p className="field-error">{companyError}</p>}
+                </div>
 
-
-                <input id="position" name="position" placeholder="Enter position" value={currentPosition} onChange={(event) => {
-                    setPositionValue(event.target.value)
-                    setPositionError("")
-                }} /><br></br>
-                <p>{positionError}</p>
-                <label>Status</label>
-
-                <select name="status" value={currentStatus} onChange={(event) => { setStatusValue(event.target.value) }}>
-                    <option>Applied</option>
-                    <option>Interview</option>
-                    <option>Rejected</option>
-                </select>
-                <br></br>
-                <button id="submit-button">
-                    Add Application</button>
-
-            </form>
-        </>
-    )
-
-}
+                <div className="form-group">
+                    <label htmlFor="position">Position</label>
 
 
-export default ApplicationForm
+                    <input id="position" name="position" placeholder="Enter position" value={currentPosition} onChange={(event) => {
+                        setPositionValue(event.target.value)
+                        setPositionError("")
+                    }} />
+                    {positionError && <p className="field-error">{positionError}</p>}
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="status">Status</label>
+
+                    <select id="status" name="status" value={currentStatus} onChange={(event) => { setStatusValue(event.target.value) }}>
+                        <option>Applied</option>
+                        <option>Interview</option>
+                        <option>Rejected</option>
+                    </select>
+                </div>
+
+                <div className="form-actions">
+                    <button type="submit" className="btn btn-primary" id="submit-button">
+                        {props.editingId !== null ? "Save Changes" : "Add Application"}
+                    </button>
+                    {props.editingId !== null && (
+                        <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={() => {
+                                props.setEditingId(null);
+                                setCompanyValue("");
+                                setPositionValue("");
+                                setStatusValue("Applied");
+                                setCompanyError("");
+                                setPositionError("");
+                            }}
+                        >
+                            Cancel
+                        </button>
+                    ) }
+                </div>
+                </form>
+                </>
+    )}
+
+
+                export default ApplicationForm

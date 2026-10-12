@@ -6,22 +6,10 @@ import { useState, useEffect } from 'react'
 
 function App() {
   const [applications, setApplications] = useState([]);
-  // const [applications, setApplications] = useState(() => {
-  //   const savedApplications = localStorage.getItem("applications")
-  //   if (savedApplications) {
-  //     const parsedApplications = JSON.parse(savedApplications)
-  //     return parsedApplications
 
-  //   }
-  //   return []
-  // })
   const [statusFilter, setStatusFilter] = useState("All")
   const [searchTerm, setSearchTerm] = useState("")
   const [editingId, setEditingId] = useState(null)
-
-  // useEffect(() => {
-  //   localStorage.setItem("applications", JSON.stringify(applications))
-  // }, [applications])
 
   useEffect(() => {
 
@@ -42,20 +30,51 @@ function App() {
   }, [])
 
   return (
-    <>
-      <Header />
-      <ApplicationForm
-        setApplications={setApplications} applications={applications}
-        editingId={editingId} setEditingId={setEditingId}
 
-      />
-      <ApplicationList applications={applications}
-        statusFilter={statusFilter} setStatusFilter={setStatusFilter}
-        searchTerm={searchTerm} setSearchTerm={setSearchTerm}
-        editingId={editingId} setEditingId={setEditingId}
-        setApplications={setApplications}
-      />
-    </>
+    <main className="app-container">
+      <Header />
+      <section className="stats-grid">
+        <div className="stat-card">
+          <div className="stat-label">Total Applications</div>
+          <div className="stat-value">{applications.length}</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-label">Applied</div>
+          <div className="stat-value">
+            {applications.filter(app => app.status === "Applied").length}
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-label">Interviews</div>
+          <div className="stat-value">
+            {applications.filter(app => app.status === "Interview").length}
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-label">Rejected</div>
+          <div className="stat-value">
+            {applications.filter(app => app.status === "Rejected").length}
+          </div>
+        </div>
+      </section>
+      <section className="card">
+        <h2 className="section-title">Manage Applications</h2>
+        <ApplicationForm
+          setApplications={setApplications}
+          applications={applications}
+          editingId={editingId}
+          setEditingId={setEditingId}
+        />
+      </section>
+      <section>
+        <ApplicationList applications={applications}
+          statusFilter={statusFilter} setStatusFilter={setStatusFilter}
+          searchTerm={searchTerm} setSearchTerm={setSearchTerm}
+          editingId={editingId} setEditingId={setEditingId}
+          setApplications={setApplications}
+        />
+      </section>
+    </main>
 
   )
 
